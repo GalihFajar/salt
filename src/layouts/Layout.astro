@@ -1,5 +1,13 @@
 ---
-// Theme toggle script — runs before page render to prevent flash
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = title === 'Salt' ? title : `${title} — Salt`;
 ---
 
 <script is:inline>
@@ -11,17 +19,6 @@
     }
   })();
 </script>
-
----
-import '../styles/global.css';
-
-export interface Props {
-  title: string;
-  description?: string;
-}
-
-const { title, description } = Astro.props;
-const pageTitle = description ? `${title} — Salt` : title;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +35,7 @@ const pageTitle = description ? `${title} — Salt` : title;
     <meta property="og:description" content={description || "Take everything with a grain of salt."} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Salt" />
-    {Astro.props.url && <meta property="og:url" content={new URL(Astro.props.url, Astro.site).href} />}
+    {Astro.url ? <meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} /> : null}
   </head>
   <body>
     <slot />
