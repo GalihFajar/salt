@@ -1,0 +1,49 @@
+---
+// Theme toggle script — runs before page render to prevent flash
+---
+
+<script is:inline>
+  (function() {
+    const saved = localStorage.getItem('salt-theme');
+    const prefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (saved === 'dark' || (!saved && prefers)) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const pageTitle = description ? `${title} — Salt` : title;
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description || "Take everything with a grain of salt."} />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="alternate" type="application/rss+xml" title="Salt — RSS Feed" href={`${import.meta.env.BASE_URL}rss.xml`} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description || "Take everything with a grain of salt."} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Salt" />
+    {Astro.props.url && <meta property="og:url" content={new URL(Astro.props.url, Astro.site).href} />}
+  </head>
+  <body>
+    <slot />
+    <footer class="site-footer">
+      <p><a href={`${import.meta.env.BASE_URL}`}>Salt</a> — read with care. <a href={`${import.meta.env.BASE_URL}rss.xml`}>RSS</a></p>
+    </footer>
+  </body>
+</html>

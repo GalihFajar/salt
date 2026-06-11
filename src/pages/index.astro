@@ -1,0 +1,22 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout title="Salt" description="A personal blog. Take everything with a grain of salt.">
+  <Header />
+  <main class="layout">
+    <p class="home-intro">
+      <strong>Salt</strong> is a personal blog. I write to clarify my thinking.
+      Take everything here with a grain of salt — opinions change, understanding deepens.
+    </p>
+    <ul class="post-list">
+      {posts.map(post => <PostCard post={post} />)}
+    </ul>
+  </main>
+</Layout>
